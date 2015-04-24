@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="keyboard_key_gap">3dp</dimen>
+    <dimen name="keyboard_key_radius">3dp</dimen>
+
+    <color name="keyboard_background">#CDCFD3</color>
+    <color name="keyboard_key_text">#252525</color>
+
+    <style name="Keyboard">
+
+    </style>
+
+    <style name="Keyboard.Number">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:textColor">#252525</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/keyboard_bg_number</item>
+    </style>
+</resources>
