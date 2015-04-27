@@ -82,7 +82,9 @@ public class CoolNumberKeyboard {
         public void onClick(View v) {
             StringBuilder number = new StringBuilder(NUMBER_LEN);
             for (TextView i : mNumber){
-                if (!" ".equals(i.getText())) number.append(i.getText());
+                if (!" ".equals(i.getText())){
+                    number.append(i.getText());
+                }
             }
             if (number.length() == NUMBER_LEN){
                 mCommitListener.onCommit(number.toString());
@@ -132,10 +134,10 @@ public class CoolNumberKeyboard {
         show(activity.getWindow().getDecorView().getRootView());
         if (TextUtils.isEmpty(givenNumber)){
             for (TextView i : mNumber) i.setText(" ");
-        }else if (mNumber.length != givenNumber.length()){
+        }else if (NUMBER_LEN != givenNumber.length()){
             throw new IllegalArgumentException("Illegal vehicle number length");
         }else{
-            char[] numbers = givenNumber.toCharArray();
+            char[] numbers = givenNumber.toUpperCase().toCharArray();
             for (int i = 0;i<NUMBER_LEN;i++){
                 mNumber[i].setText(Character.toString(numbers[i]));
             }

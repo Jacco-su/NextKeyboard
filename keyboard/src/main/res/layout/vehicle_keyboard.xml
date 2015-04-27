@@ -83,7 +83,6 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_margin="1dp"
         android:shadowRadius="0"
         android:background="@color/keyboard_background"
         android:keyBackground="@drawable/keyboard_bg_key"
