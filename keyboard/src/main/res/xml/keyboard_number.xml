@@ -44,7 +44,7 @@
     <Row>
         <Key android:codes="87" android:keyLabel="W" android:keyWidth="25%p" android:keyEdgeFlags="left" />
         <Key android:codes="88" android:keyLabel="X" android:keyWidth="25%p" />
-        <Key android:codes="98" android:keyLabel="Y" android:keyWidth="25%p" />
+        <Key android:codes="89" android:keyLabel="Y" android:keyWidth="25%p" />
         <Key android:codes="90" android:keyLabel="Z" android:keyWidth="25%p" android:keyEdgeFlags="right"/>
     </Row>
 
