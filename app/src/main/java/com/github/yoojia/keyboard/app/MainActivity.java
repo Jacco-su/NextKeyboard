@@ -2,15 +2,12 @@ package com.github.yoojia.keyboard.app;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.yoojia.keyboard.CoolNumberKeyboard;
 import com.github.yoojia.keyboard.OnNumberCommitListener;
-import com.github.yoojia.keyboard.app.R;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -21,7 +18,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mKeyboard = new CoolNumberKeyboard(this);
+        mKeyboard = new CoolNumberKeyboard(this, true);
 
         Button button = (Button) findViewById(R.id.show);
         button.setOnClickListener(new View.OnClickListener() {

@@ -93,12 +93,19 @@ public class CoolNumberKeyboard {
         }
     };
 
+    private final boolean mAutoCommit;
+    private View mCommitButton;
     private int mShowKeyboard = 0;
     private TextView mSelectedTextView;
     private OnNumberCommitListener mCommitListener;
 
     public CoolNumberKeyboard(Context context) {
+        this(context, false);
+    }
+
+    public CoolNumberKeyboard(Context context, boolean autoCommit) {
         mContext = context;
+        mAutoCommit = autoCommit;
         final View contentView = View.inflate(context, R.layout.vehicle_keyboard, null);
 
         mNumber[0] = (TextView) contentView.findViewById(R.id.keyboard_number_0);
@@ -120,8 +127,8 @@ public class CoolNumberKeyboard {
         mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(context.getResources(), (Bitmap) null));
 
-        View commit = contentView.findViewById(R.id.keyboard_commit);
-        commit.setOnClickListener(mCommitClickListener);
+        mCommitButton = contentView.findViewById(R.id.keyboard_commit);
+        mCommitButton.setOnClickListener(mCommitClickListener);
     }
 
 
@@ -191,8 +198,8 @@ public class CoolNumberKeyboard {
         } else if (numberId == R.id.keyboard_number_5) {
             mNumber[6].performClick();
 
-        } else if (numberId == R.id.keyboard_number_6) {
-            // nop
+        } else if (numberId == R.id.keyboard_number_6 && mAutoCommit) {
+            mCommitButton.performClick();
         }
     }
 
