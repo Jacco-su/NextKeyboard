@@ -54,22 +54,22 @@ public class CoolNumberKeyboard {
             if (id == R.id.keyboard_number_0) {
                 if (mShowKeyboard != R.xml.keyboard_province) {
                     mShowKeyboard = R.xml.keyboard_province;
-                    showProvince();
+                    mKeyboardView.setKeyboard(mProvinceKeyboard);
                 }
             } else if (id == R.id.keyboard_number_1) {
                 if (mShowKeyboard != R.xml.keyboard_city_code) {
                     mShowKeyboard = R.xml.keyboard_city_code;
-                    showCityCode();
+                    mKeyboardView.setKeyboard(mCityCodeKeyboard);
                 }
             } else if (id == R.id.keyboard_number_6) {
                 if (mShowKeyboard != R.xml.keyboard_number_extra) {
                     mShowKeyboard = R.xml.keyboard_number_extra;
-                    showNumberExtra();
+                    mKeyboardView.setKeyboard(mNumberExtraKeyboard);
                 }
             } else {
                 if (mShowKeyboard != R.xml.keyboard_number) {
                     mShowKeyboard = R.xml.keyboard_number;
-                    showNumber();
+                    mKeyboardView.setKeyboard(mNumberKeyboard);
                 }
             }
             mKeyboardView.invalidateAllKeys();
@@ -99,6 +99,11 @@ public class CoolNumberKeyboard {
     private TextView mSelectedTextView;
     private OnNumberCommitListener mCommitListener;
 
+    private Keyboard mProvinceKeyboard;
+    private Keyboard mCityCodeKeyboard;
+    private Keyboard mNumberKeyboard;
+    private Keyboard mNumberExtraKeyboard;
+
     public CoolNumberKeyboard(Context context) {
         this(context, false);
     }
@@ -117,6 +122,11 @@ public class CoolNumberKeyboard {
         mNumber[6] = (TextView) contentView.findViewById(R.id.keyboard_number_6);
 
         for (TextView m : mNumber) m.setOnClickListener(mNumberSelectedHandler);
+
+        mProvinceKeyboard = new Keyboard(mContext, R.xml.keyboard_province);
+        mCityCodeKeyboard = new Keyboard(mContext, R.xml.keyboard_city_code);
+        mNumberKeyboard = new Keyboard(mContext, R.xml.keyboard_number);
+        mNumberExtraKeyboard = new Keyboard(mContext, R.xml.keyboard_number_extra);
 
         mKeyboardView = (KeyboardView) contentView.findViewById(R.id.keyboard_view);
         mKeyboardView.setOnKeyboardActionListener(mKeyboardActionHandler);
@@ -153,26 +163,6 @@ public class CoolNumberKeyboard {
 
     public void dismiss(){
         mPopupWindow.dismiss();
-    }
-
-    private void showProvince(){
-        Keyboard keyboard = new Keyboard(mContext, R.xml.keyboard_province);
-        mKeyboardView.setKeyboard(keyboard);
-    }
-
-    private void showCityCode(){
-        Keyboard keyboard = new Keyboard(mContext, R.xml.keyboard_city_code);
-        mKeyboardView.setKeyboard(keyboard);
-    }
-
-    private void showNumber(){
-        Keyboard keyboard = new Keyboard(mContext, R.xml.keyboard_number);
-        mKeyboardView.setKeyboard(keyboard);
-    }
-
-    private void showNumberExtra(){
-        Keyboard keyboard = new Keyboard(mContext, R.xml.keyboard_number_extra);
-        mKeyboardView.setKeyboard(keyboard);
     }
 
     /**
