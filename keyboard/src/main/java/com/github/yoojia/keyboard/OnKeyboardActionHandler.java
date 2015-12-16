@@ -9,7 +9,7 @@ import android.inputmethodservice.KeyboardView;
  * @version version 2015-04-24
  * @since   1.0
  */
-public class OnKeyboardActionHandler implements KeyboardView.OnKeyboardActionListener{
+class OnKeyboardActionHandler implements KeyboardView.OnKeyboardActionListener{
 
     @Override
     public void onPress(int i) {

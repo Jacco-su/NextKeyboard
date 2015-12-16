@@ -22,4 +22,9 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/keyboard_bg_number</item>
     </style>
+
+    <style name="KeyboardInputNumber.Password">
+        <item name="android:inputType">textPassword</item>
+        <item name="android:hint">-</item>
+    </style>
 </resources>
