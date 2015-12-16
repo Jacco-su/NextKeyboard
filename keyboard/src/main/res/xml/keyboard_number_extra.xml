@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Keyboard
-    android:keyWidth="10%p"
-    android:keyHeight="51dp"
-    android:horizontalGap="@dimen/keyboard_key_gap"
-    android:verticalGap="@dimen/keyboard_key_gap"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyHeight="@dimen/keyboard_key_height"
+    android:keyWidth="10.00005%p"
+    >
     <Row>
         <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="left" />
         <Key android:codes="49" android:keyLabel="1" />
@@ -41,8 +40,10 @@
         <Key android:codes="85" android:keyLabel="U" />
         <Key android:codes="86" android:keyLabel="V" android:keyEdgeFlags="right" />
     </Row>
-    <Row android:keyWidth="11.111111%p">
-        <Key android:codes="87" android:keyLabel="W" android:keyEdgeFlags="left" />
+    <Row>
+        <Key android:codes="87" android:keyLabel="W"
+             android:horizontalGap="5.00005%p"
+             android:keyEdgeFlags="left" />
         <Key android:codes="88" android:keyLabel="X" />
         <Key android:codes="89" android:keyLabel="Y" />
         <Key android:codes="90" android:keyLabel="Z" />

@@ -20,7 +20,7 @@ import android.widget.TextView;
  * @version version 2015-04-24
  * @since   1.0
  */
-public class CoolNumberKeyboard {
+public class VehiclePlateKeyboard {
 
     private static final int NUMBER_LEN = 7;
 
@@ -104,11 +104,11 @@ public class CoolNumberKeyboard {
     private Keyboard mNumberKeyboard;
     private Keyboard mNumberExtraKeyboard;
 
-    public CoolNumberKeyboard(Context context) {
+    public VehiclePlateKeyboard(Context context) {
         this(context, false);
     }
 
-    public CoolNumberKeyboard(Context context, boolean autoCommit) {
+    public VehiclePlateKeyboard(Context context, boolean autoCommit) {
         mContext = context;
         mAutoCommit = autoCommit;
         final View contentView = View.inflate(context, R.layout.vehicle_keyboard, null);
@@ -150,7 +150,7 @@ public class CoolNumberKeyboard {
         mCommitListener = commitListener;
         show(activity.getWindow().getDecorView().getRootView());
         if (TextUtils.isEmpty(givenNumber)){
-            for (TextView i : mNumber) i.setText(" ");
+            return;
         }else if (NUMBER_LEN != givenNumber.length()){
             throw new IllegalArgumentException("Illegal vehicle number length");
         }else{

@@ -6,19 +6,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.github.yoojia.keyboard.CoolNumberKeyboard;
+import com.github.yoojia.keyboard.VehiclePlateKeyboard;
 import com.github.yoojia.keyboard.OnNumberCommitListener;
 
 public class MainActivity extends ActionBarActivity {
 
-    private CoolNumberKeyboard mKeyboard;
+    private VehiclePlateKeyboard mKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mKeyboard = new CoolNumberKeyboard(this, true);
+        mKeyboard = new VehiclePlateKeyboard(this, true);
 
         Button button = (Button) findViewById(R.id.show);
         button.setOnClickListener(new View.OnClickListener() {
