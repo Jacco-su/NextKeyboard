@@ -88,8 +88,6 @@
         android:background="@color/keyboard_background"
         android:keyBackground="@drawable/keyboard_bg_key"
         android:keyTextColor="@color/keyboard_key_text"
-        android:paddingLeft="1dp"
-        android:paddingRight="1dp"
         android:paddingBottom="1dp"
     />
 

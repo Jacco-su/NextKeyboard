@@ -31,68 +31,6 @@ public class VehiclePlateKeyboard {
     private final KeyboardView mKeyboardView;
     private final TextView[] mNumber = new TextView[NUMBER_LENGTH];
 
-    private final OnKeyboardActionHandler mKeyboardActionHandler = new OnKeyboardActionHandler(){
-        @Override
-        public void onKey(int charCode, int[] keyCodes) {
-            if (charCode >= 400){ // 400 See keyboard xml
-                charCode = CHINESE.charAt(charCode - 400);
-            }
-            mSelectedTextView.setText(Character.toString((char) charCode));
-            autoNextNumber();
-        }
-    };
-
-    private final View.OnClickListener mNumberSelectedHandler = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            if (mSelectedTextView != null){
-                mSelectedTextView.setActivated(false);
-            }
-            mSelectedTextView = (TextView) view;
-            mSelectedTextView.setActivated(true);
-            int id = view.getId();
-            if (id == R.id.keyboard_number_0) {
-                if (mShowKeyboard != R.xml.keyboard_province) {
-                    mShowKeyboard = R.xml.keyboard_province;
-                    mKeyboardView.setKeyboard(mProvinceKeyboard);
-                }
-            } else if (id == R.id.keyboard_number_1) {
-                if (mShowKeyboard != R.xml.keyboard_city_code) {
-                    mShowKeyboard = R.xml.keyboard_city_code;
-                    mKeyboardView.setKeyboard(mCityCodeKeyboard);
-                }
-            } else if (id == R.id.keyboard_number_6) {
-                if (mShowKeyboard != R.xml.keyboard_number_extra) {
-                    mShowKeyboard = R.xml.keyboard_number_extra;
-                    mKeyboardView.setKeyboard(mNumberExtraKeyboard);
-                }
-            } else {
-                if (mShowKeyboard != R.xml.keyboard_number) {
-                    mShowKeyboard = R.xml.keyboard_number;
-                    mKeyboardView.setKeyboard(mNumberKeyboard);
-                }
-            }
-            mKeyboardView.invalidateAllKeys();
-            mKeyboardView.invalidate();
-        }
-    };
-
-    private final View.OnClickListener mCommitClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            StringBuilder number = new StringBuilder(NUMBER_LENGTH);
-            for (TextView i : mNumber){
-                if (!" ".equals(i.getText())){
-                    number.append(i.getText());
-                }
-            }
-            if (number.length() == NUMBER_LENGTH){
-                mCommitListener.onCommit(number.toString());
-                dismiss();
-            }
-        }
-    };
-
     private final boolean mAutoCommit;
     private View mCommitButton;
     private int mShowKeyboard = 0;
@@ -121,8 +59,42 @@ public class VehiclePlateKeyboard {
         mNumber[5] = (TextView) contentView.findViewById(R.id.keyboard_number_5);
         mNumber[6] = (TextView) contentView.findViewById(R.id.keyboard_number_6);
 
+        final View.OnClickListener numberSelectedHandler = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mSelectedTextView != null){
+                    mSelectedTextView.setActivated(false);
+                }
+                mSelectedTextView = (TextView) view;
+                mSelectedTextView.setActivated(true);
+                int id = view.getId();
+                if (id == R.id.keyboard_number_0) {
+                    if (mShowKeyboard != R.xml.keyboard_province) {
+                        mShowKeyboard = R.xml.keyboard_province;
+                        mKeyboardView.setKeyboard(mProvinceKeyboard);
+                    }
+                } else if (id == R.id.keyboard_number_1) {
+                    if (mShowKeyboard != R.xml.keyboard_city_code) {
+                        mShowKeyboard = R.xml.keyboard_city_code;
+                        mKeyboardView.setKeyboard(mCityCodeKeyboard);
+                    }
+                } else if (id == R.id.keyboard_number_6) {
+                    if (mShowKeyboard != R.xml.keyboard_number_extra) {
+                        mShowKeyboard = R.xml.keyboard_number_extra;
+                        mKeyboardView.setKeyboard(mNumberExtraKeyboard);
+                    }
+                } else {
+                    if (mShowKeyboard != R.xml.keyboard_number) {
+                        mShowKeyboard = R.xml.keyboard_number;
+                        mKeyboardView.setKeyboard(mNumberKeyboard);
+                    }
+                }
+                mKeyboardView.invalidateAllKeys();
+                mKeyboardView.invalidate();
+            }
+        };
         for (TextView m : mNumber) {
-            m.setOnClickListener(mNumberSelectedHandler);
+            m.setOnClickListener(numberSelectedHandler);
         }
 
         mProvinceKeyboard = new Keyboard(mContext, R.xml.keyboard_province);
@@ -131,7 +103,16 @@ public class VehiclePlateKeyboard {
         mNumberExtraKeyboard = new Keyboard(mContext, R.xml.keyboard_number_extra);
 
         mKeyboardView = (KeyboardView) contentView.findViewById(R.id.keyboard_view);
-        mKeyboardView.setOnKeyboardActionListener(mKeyboardActionHandler);
+        mKeyboardView.setOnKeyboardActionListener(new OnKeyboardActionHandler(){
+            @Override
+            public void onKey(int charCode, int[] keyCodes) {
+                if (charCode >= 400){ // 400 See keyboard xml
+                    charCode = CHINESE.charAt(charCode - 400);
+                }
+                mSelectedTextView.setText(Character.toString((char) charCode));
+                autoNextNumber();
+            }
+        });
         mKeyboardView.setPreviewEnabled(false);// !!! Must be false
 
         mPopupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -140,9 +121,22 @@ public class VehiclePlateKeyboard {
         mPopupWindow.setBackgroundDrawable(new BitmapDrawable(context.getResources(), (Bitmap) null));
 
         mCommitButton = contentView.findViewById(R.id.keyboard_commit);
-        mCommitButton.setOnClickListener(mCommitClickListener);
+        mCommitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuilder number = new StringBuilder(NUMBER_LENGTH);
+                for (TextView i : mNumber){
+                    if (!" ".equals(i.getText())){
+                        number.append(i.getText());
+                    }
+                }
+                if (number.length() == NUMBER_LENGTH){
+                    mCommitListener.onCommit(number.toString());
+                    dismiss();
+                }
+            }
+        });
     }
-
 
     /**
      * 显示车牌输入法
