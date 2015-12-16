@@ -18,7 +18,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mKeyboard = new VehiclePlateKeyboard(this, true);
+        mKeyboard = new VehiclePlateKeyboard(this);
 
         Button button = (Button) findViewById(R.id.show);
         button.setOnClickListener(new View.OnClickListener() {

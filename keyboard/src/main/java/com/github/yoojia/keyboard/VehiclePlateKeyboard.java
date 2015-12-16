@@ -22,14 +22,14 @@ import android.widget.TextView;
  */
 public class VehiclePlateKeyboard {
 
-    private static final int NUMBER_LEN = 7;
+    private static final int NUMBER_LENGTH = 7;
 
     private static final String CHINESE = "|京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新|港澳警学挂";
 
     private final Context mContext;
     private final PopupWindow mPopupWindow;
     private final KeyboardView mKeyboardView;
-    private final TextView[] mNumber = new TextView[NUMBER_LEN];
+    private final TextView[] mNumber = new TextView[NUMBER_LENGTH];
 
     private final OnKeyboardActionHandler mKeyboardActionHandler = new OnKeyboardActionHandler(){
         @Override
@@ -80,13 +80,13 @@ public class VehiclePlateKeyboard {
     private final View.OnClickListener mCommitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            StringBuilder number = new StringBuilder(NUMBER_LEN);
+            StringBuilder number = new StringBuilder(NUMBER_LENGTH);
             for (TextView i : mNumber){
                 if (!" ".equals(i.getText())){
                     number.append(i.getText());
                 }
             }
-            if (number.length() == NUMBER_LEN){
+            if (number.length() == NUMBER_LENGTH){
                 mCommitListener.onCommit(number.toString());
                 dismiss();
             }
@@ -111,7 +111,7 @@ public class VehiclePlateKeyboard {
     public VehiclePlateKeyboard(Context context, boolean autoCommit) {
         mContext = context;
         mAutoCommit = autoCommit;
-        final View contentView = View.inflate(context, R.layout.vehicle_keyboard, null);
+        final View contentView = View.inflate(context, R.layout.next_keyboard_vehicle_plate, null);
 
         mNumber[0] = (TextView) contentView.findViewById(R.id.keyboard_number_0);
         mNumber[1] = (TextView) contentView.findViewById(R.id.keyboard_number_1);
@@ -121,7 +121,9 @@ public class VehiclePlateKeyboard {
         mNumber[5] = (TextView) contentView.findViewById(R.id.keyboard_number_5);
         mNumber[6] = (TextView) contentView.findViewById(R.id.keyboard_number_6);
 
-        for (TextView m : mNumber) m.setOnClickListener(mNumberSelectedHandler);
+        for (TextView m : mNumber) {
+            m.setOnClickListener(mNumberSelectedHandler);
+        }
 
         mProvinceKeyboard = new Keyboard(mContext, R.xml.keyboard_province);
         mCityCodeKeyboard = new Keyboard(mContext, R.xml.keyboard_city_code);
@@ -148,17 +150,25 @@ public class VehiclePlateKeyboard {
      */
     public void show(Activity activity, String givenNumber, OnNumberCommitListener commitListener){
         mCommitListener = commitListener;
-        show(activity.getWindow().getDecorView().getRootView());
-        if (TextUtils.isEmpty(givenNumber)){
-            return;
-        }else if (NUMBER_LEN != givenNumber.length()){
-            throw new IllegalArgumentException("Illegal vehicle number length");
-        }else{
-            char[] numbers = givenNumber.toUpperCase().toCharArray();
-            for (int i = 0;i<NUMBER_LEN;i++){
-                mNumber[i].setText(Character.toString(numbers[i]));
+        if ( ! TextUtils.isEmpty(givenNumber)){
+            if (NUMBER_LENGTH != givenNumber.length()){
+                throw new IllegalArgumentException("Illegal vehicle number length");
+            }else{
+                final char[] numbers = givenNumber.toUpperCase().toCharArray();
+                for (int i = 0;i< NUMBER_LENGTH;i++){
+                    mNumber[i].setText(Character.toString(numbers[i]));
+                }
             }
         }
+        final View anchorView = activity.getWindow().getDecorView().getRootView();
+        anchorView.post(new Runnable() {
+            @Override
+            public void run() {
+                mPopupWindow.showAtLocation(anchorView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+                mNumber[0].performClick();
+            }
+        });
+
     }
 
     public void dismiss(){
@@ -172,30 +182,19 @@ public class VehiclePlateKeyboard {
         int numberId = mSelectedTextView.getId();
         if (numberId == R.id.keyboard_number_0) {
             mNumber[1].performClick();
-
         } else if (numberId == R.id.keyboard_number_1) {
             mNumber[2].performClick();
-
         } else if (numberId == R.id.keyboard_number_2) {
             mNumber[3].performClick();
-
         } else if (numberId == R.id.keyboard_number_3) {
             mNumber[4].performClick();
-
         } else if (numberId == R.id.keyboard_number_4) {
             mNumber[5].performClick();
-
         } else if (numberId == R.id.keyboard_number_5) {
             mNumber[6].performClick();
-
         } else if (numberId == R.id.keyboard_number_6 && mAutoCommit) {
             mCommitButton.performClick();
         }
-    }
-
-    private void show(View anchorView){
-        mPopupWindow.showAtLocation(anchorView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-        mNumber[0].performClick();
     }
 
 }
