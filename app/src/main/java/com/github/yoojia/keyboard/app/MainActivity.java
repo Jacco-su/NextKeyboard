@@ -21,16 +21,15 @@ public class MainActivity extends ActionBarActivity {
 
         final Button vehicle = (Button) findViewById(R.id.vehicle);
 
-        final View anchorView = MainActivity.this.getWindow().getDecorView().getRootView();
         vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new VehiclePlateKeyboard(getBaseContext(), new OnCommitListener() {
+                VehiclePlateKeyboard.create(MainActivity.this, new OnCommitListener() {
                     @Override
                     public void onCommit(String input) {
                         display.setText(input);
                     }
-                }).show(anchorView);
+                });
             }
         });
 
@@ -38,12 +37,12 @@ public class MainActivity extends ActionBarActivity {
         number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new PasswordKeyboard(getBaseContext(), new OnCommitListener() {
+                PasswordKeyboard.show(MainActivity.this, new OnCommitListener() {
                     @Override
                     public void onCommit(String input) {
-
+                        display.setText(input);
                     }
-                }).show(anchorView);
+                });
             }
         });
     }

@@ -24,9 +24,7 @@
 
     <Row >
         <Key android:codes="48" android:keyLabel="0"
-             android:horizontalGap="33.333333%p"
-             android:keyEdgeFlags="left" />
-        <Key android:codes="49" android:keyLabel="删" android:keyEdgeFlags="right"/>
+             android:keyWidth="100%p" />
     </Row>
 
 </Keyboard>
