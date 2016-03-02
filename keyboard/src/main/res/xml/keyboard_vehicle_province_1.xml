@@ -38,16 +38,14 @@
     </Row>
 
     <Row>
-        <Key android:codes="425" android:keyLabel="云"
-             android:horizontalGap="6.249999%p"
-             android:keyEdgeFlags="left"/>
+        <Key android:codes="425" android:keyLabel="云" android:keyEdgeFlags="left"/>
         <Key android:codes="426" android:keyLabel="藏" />
         <Key android:codes="427" android:keyLabel="陕" />
         <Key android:codes="428" android:keyLabel="甘" />
         <Key android:codes="429" android:keyLabel="青" />
         <Key android:codes="430" android:keyLabel="宁" />
-        <Key android:codes="431" android:keyLabel="新"
-             android:keyEdgeFlags="right"/>
+        <Key android:codes="431" android:keyLabel="新" />
+        <Key android:codes="432" android:keyLabel="武" android:keyEdgeFlags="right"/>
     </Row>
 
 </Keyboard>

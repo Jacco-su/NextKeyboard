@@ -18,11 +18,14 @@ class AbstractKeyboard {
     private final Context mContext;
     private final PopupWindow mPopupWindow;
 
-    protected final OnCommitListener mCommitListener;
+    protected final OnKeyActionListener mOnKeyActionListener;
 
-    public AbstractKeyboard(Context context, OnCommitListener commitListener) {
+    public AbstractKeyboard(Context context, OnKeyActionListener onKeyActionListener) {
         mContext = context;
-        mCommitListener = commitListener;
+        if (onKeyActionListener == null) {
+            throw new NullPointerException("onKeyActionListener == null");
+        }
+        mOnKeyActionListener = onKeyActionListener;
         mPopupWindow = new PopupWindow(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(false);
@@ -47,13 +50,14 @@ class AbstractKeyboard {
     }
 
     protected String getInput(TextView[] inputs) {
-        final StringBuilder value = new StringBuilder(inputs.length);
+        final StringBuilder buff = new StringBuilder(inputs.length);
         for (TextView item : inputs){
-            if (! TextUtils.isEmpty(item.getText())){
-                value.append(item.getText());
+            String text = String.valueOf(item.getText());
+            if (! TextUtils.isEmpty(text)){
+                buff.append(text);
             }
         }
-        return value.toString();
+        return buff.toString();
     }
 
 }

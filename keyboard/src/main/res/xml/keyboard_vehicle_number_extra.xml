@@ -47,11 +47,11 @@
         <Key android:codes="88" android:keyLabel="X" />
         <Key android:codes="89" android:keyLabel="Y" />
         <Key android:codes="90" android:keyLabel="Z" />
-        <Key android:codes="433" android:keyLabel="港" />
-        <Key android:codes="434" android:keyLabel="澳" />
-        <Key android:codes="435" android:keyLabel="警" />
-        <Key android:codes="436" android:keyLabel="学" />
-        <Key android:codes="437" android:keyLabel="挂" android:keyEdgeFlags="right" />
+        <Key android:codes="501" android:keyLabel="港" />
+        <Key android:codes="502" android:keyLabel="澳" />
+        <Key android:codes="503" android:keyLabel="警" />
+        <Key android:codes="504" android:keyLabel="学" />
+        <Key android:codes="505" android:keyLabel="挂" android:keyEdgeFlags="right" />
     </Row>
 
 </Keyboard>

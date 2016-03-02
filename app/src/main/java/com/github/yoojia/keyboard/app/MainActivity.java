@@ -5,10 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.yoojia.keyboard.PasswordKeyboard;
 import com.github.yoojia.keyboard.VehiclePlateKeyboard;
-import com.github.yoojia.keyboard.OnCommitListener;
+import com.github.yoojia.keyboard.OnKeyActionListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -24,12 +25,19 @@ public class MainActivity extends ActionBarActivity {
         vehicle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VehiclePlateKeyboard.create(MainActivity.this, new OnCommitListener() {
+                VehiclePlateKeyboard keyboard = new VehiclePlateKeyboard(MainActivity.this, new OnKeyActionListener() {
                     @Override
-                    public void onCommit(String input) {
+                    public void onFinish(String input) {
                         display.setText(input);
                     }
+
+                    @Override
+                    public void onProcess(String input) {
+                        display.setText("Processing: " + input);
+                    }
                 });
+                keyboard.setDefaultPlateNumber("WJ粤12345");
+                keyboard.show(getWindow().getDecorView().getRootView());
             }
         });
 
@@ -37,10 +45,15 @@ public class MainActivity extends ActionBarActivity {
         number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PasswordKeyboard.show(MainActivity.this, new OnCommitListener() {
+                PasswordKeyboard.show(MainActivity.this, new OnKeyActionListener() {
                     @Override
-                    public void onCommit(String input) {
+                    public void onFinish(String input) {
                         display.setText(input);
+                    }
+
+                    @Override
+                    public void onProcess(String input) {
+                        display.setText("Processing: " + input);
                     }
                 });
             }

@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 /**
- * 车辆号码键盘
+ * 中国民用
  *
  * @author  yoojia.chen@gmail.com
  * @version version 2015-04-24
@@ -19,24 +19,28 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
 
     private static final int NUMBER_LENGTH = 7;
 
-    private static final String CHINESE = "|京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新|港澳警学挂";
+    public static final String WJ_PREFIX = "WJ";
+
+    private static final String PROVINCE_CHINESE = "@京津晋冀蒙辽吉黑沪苏浙皖闽赣鲁豫鄂湘粤桂琼渝川贵云藏陕甘青宁新武";
+    public static final String EXTRA_CHINESE = "@港澳警学挂";
 
     private final KeyboardView mKeyboardView;
     private final TextView[] mNumbersTextView = new TextView[NUMBER_LENGTH];
 
     private View mCommitButton;
-    private int mShowKeyboard = 0;
+    private int mShowingKeyboard = 0;
     private TextView mSelectedTextView;
 
-    private Keyboard mProvinceKeyboard;
+    private Keyboard mProvinceKeyboard_1;
+    private Keyboard mProvinceKeyboard_0;
     private Keyboard mCityCodeKeyboard;
     private Keyboard mNumberKeyboard;
     private Keyboard mNumberExtraKeyboard;
 
     private String mDefaultPlateNumber;
 
-    public VehiclePlateKeyboard(Context context, OnCommitListener commitListener) {
-        super(context, commitListener);
+    public VehiclePlateKeyboard(Context context, OnKeyActionListener keyActionListener) {
+        super(context, keyActionListener);
 
         final View contentView = putContentView(R.layout.keyboard_vehicle_plate);
 
@@ -49,11 +53,13 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
         mNumbersTextView[6] = (TextView) contentView.findViewById(R.id.keyboard_number_6);
 
         final View.OnClickListener listener = createNumberListener();
-        for (TextView m : mNumbersTextView) {
-            m.setOnClickListener(listener);
+        for (TextView view : mNumbersTextView) {
+            view.setSoundEffectsEnabled(false);
+            view.setOnClickListener(listener);
         }
 
-        mProvinceKeyboard = new Keyboard(context, R.xml.keyboard_vehicle_province);
+        mProvinceKeyboard_1 = new Keyboard(context, R.xml.keyboard_vehicle_province_1);
+        mProvinceKeyboard_0 = new Keyboard(context, R.xml.keyboard_vehicle_province_0);
         mCityCodeKeyboard = new Keyboard(context, R.xml.keyboard_vehicle_code);
         mNumberKeyboard = new Keyboard(context, R.xml.keyboard_vehicle_number);
         mNumberExtraKeyboard = new Keyboard(context, R.xml.keyboard_vehicle_number_extra);
@@ -62,8 +68,11 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
         mKeyboardView.setOnKeyboardActionListener(new OnKeyboardActionHandler(){
             @Override
             public void onKey(int charCode, int[] keyCodes) {
-                if (charCode >= 400){ // 400 See keyboard xml
-                    charCode = CHINESE.charAt(charCode - 400);
+                // 在键盘XML文件中，40x为省份文字使用的编码，50x为特定尾号文字的编码
+                if (400 < charCode && charCode < 500){ // 400 See keyboard xml
+                    charCode = PROVINCE_CHINESE.charAt(charCode - 400);
+                }else if (500 < charCode) {
+                    charCode = EXTRA_CHINESE.charAt(charCode - 500);
                 }
                 mSelectedTextView.setText(Character.toString((char) charCode));
                 nextNumber();
@@ -77,7 +86,7 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
             public void onClick(View v) {
                 final String number = getInput(mNumbersTextView);
                 if (number.length() == mNumbersTextView.length){
-                    mCommitListener.onCommit(number);
+                    mOnKeyActionListener.onFinish(number);
                     dismiss();
                 }
             }
@@ -85,19 +94,22 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
     }
 
     public void setDefaultPlateNumber(String number) {
-        mDefaultPlateNumber = number;
+        if (!TextUtils.isEmpty(number)) {
+            if (number.startsWith(WJ_PREFIX)) {
+                mDefaultPlateNumber = "武" + number.substring(number.length() > 2 ? 2 : 0);
+            }else{
+                mDefaultPlateNumber = number;
+            }
+        }
     }
 
     @Override
     public void show(View anchorView) {
         if ( ! TextUtils.isEmpty(mDefaultPlateNumber)){
-            if (NUMBER_LENGTH != mDefaultPlateNumber.length()){
-                throw new IllegalArgumentException("Illegal vehicle number:" + mDefaultPlateNumber);
-            }else{
-                final char[] numbers = mDefaultPlateNumber.toUpperCase().toCharArray();
-                for (int i = 0;i< NUMBER_LENGTH;i++){
-                    mNumbersTextView[i].setText(Character.toString(numbers[i]));
-                }
+            final char[] numbers = mDefaultPlateNumber.toUpperCase().toCharArray();
+            final int limited = Math.min(NUMBER_LENGTH, numbers.length);
+            for (int i = 0;i< limited;i++){
+                mNumbersTextView[i].setText(Character.toString(numbers[i]));
             }
         }
         super.show(anchorView);
@@ -109,6 +121,8 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
     }
 
     private void nextNumber(){
+        final String number = getInput(mNumbersTextView);
+        mOnKeyActionListener.onProcess(number);
         final int viewId = mSelectedTextView.getId();
         if (viewId == R.id.keyboard_number_0) {
             mNumbersTextView[1].performClick();
@@ -128,7 +142,7 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
     }
 
     private View.OnClickListener createNumberListener() {
-        final View.OnClickListener listener = new View.OnClickListener() {
+        return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mSelectedTextView != null){
@@ -138,23 +152,29 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
                 mSelectedTextView.setActivated(true);
                 int id = view.getId();
                 if (id == R.id.keyboard_number_0) {
-                    if (mShowKeyboard != R.xml.keyboard_vehicle_province) {
-                        mShowKeyboard = R.xml.keyboard_vehicle_province;
-                        mKeyboardView.setKeyboard(mProvinceKeyboard);
+                    if (mShowingKeyboard != R.xml.keyboard_vehicle_province_1) {
+                        mShowingKeyboard = R.xml.keyboard_vehicle_province_1;
+                        mKeyboardView.setKeyboard(mProvinceKeyboard_1);
                     }
                 } else if (id == R.id.keyboard_number_1) {
-                    if (mShowKeyboard != R.xml.keyboard_vehicle_code) {
-                        mShowKeyboard = R.xml.keyboard_vehicle_code;
-                        mKeyboardView.setKeyboard(mCityCodeKeyboard);
+                    final String number = getInput(mNumbersTextView);
+                    if (number.startsWith(WJ_PREFIX)) {
+                        mShowingKeyboard = R.xml.keyboard_vehicle_province_0;
+                        mKeyboardView.setKeyboard(mProvinceKeyboard_0);
+                    }else{
+                        if (mShowingKeyboard != R.xml.keyboard_vehicle_code) {
+                            mShowingKeyboard = R.xml.keyboard_vehicle_code;
+                            mKeyboardView.setKeyboard(mCityCodeKeyboard);
+                        }
                     }
                 } else if (id == R.id.keyboard_number_6) {
-                    if (mShowKeyboard != R.xml.keyboard_vehicle_number_extra) {
-                        mShowKeyboard = R.xml.keyboard_vehicle_number_extra;
+                    if (mShowingKeyboard != R.xml.keyboard_vehicle_number_extra) {
+                        mShowingKeyboard = R.xml.keyboard_vehicle_number_extra;
                         mKeyboardView.setKeyboard(mNumberExtraKeyboard);
                     }
                 } else {
-                    if (mShowKeyboard != R.xml.keyboard_vehicle_number) {
-                        mShowKeyboard = R.xml.keyboard_vehicle_number;
+                    if (mShowingKeyboard != R.xml.keyboard_vehicle_number) {
+                        mShowingKeyboard = R.xml.keyboard_vehicle_number;
                         mKeyboardView.setKeyboard(mNumberKeyboard);
                     }
                 }
@@ -162,14 +182,19 @@ public class VehiclePlateKeyboard extends AbstractKeyboard{
                 mKeyboardView.invalidate();
             }
         };
-        return listener;
     }
 
-    public static void create(Activity context, OnCommitListener listener) {
-        new VehiclePlateKeyboard(context, listener).show(context.getWindow().getDecorView().getRootView());
+    @Override
+    protected String getInput(TextView[] inputs) {
+        final String number = super.getInput(inputs);
+        return number.replace("武", WJ_PREFIX);
     }
 
-    public static VehiclePlateKeyboard create(Context context, OnCommitListener listener) {
+    public static void show(Activity activity, OnKeyActionListener listener) {
+        new VehiclePlateKeyboard(activity, listener).show(activity.getWindow().getDecorView().getRootView());
+    }
+
+    public static VehiclePlateKeyboard create(Context context, OnKeyActionListener listener) {
         return new VehiclePlateKeyboard(context, listener);
     }
 
