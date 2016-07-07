@@ -36,7 +36,6 @@ class AbstractKeyboard {
 
     protected View putContentView(int layoutResId) {
         final View view = LayoutInflater.from(mContext).inflate(layoutResId,null);
-        view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         mPopupWindow.setContentView(view);
         return view;
     }
