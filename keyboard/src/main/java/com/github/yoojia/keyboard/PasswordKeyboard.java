@@ -97,7 +97,8 @@ public class PasswordKeyboard extends AbstractKeyboard{
     }
 
     public static void show(Activity context, OnKeyActionListener listener) {
-        new PasswordKeyboard(context, listener).show(context.getWindow().getDecorView().getRootView());
+        View v= context.getWindow().getDecorView().getRootView();
+        new PasswordKeyboard(context, listener).show(v);
     }
 
     public static PasswordKeyboard create(Context context, OnKeyActionListener listener) {

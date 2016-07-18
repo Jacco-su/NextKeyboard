@@ -3,10 +3,13 @@ package com.github.yoojia.keyboard;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.provider.Contacts;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -17,7 +20,6 @@ class AbstractKeyboard {
 
     private final Context mContext;
     private final PopupWindow mPopupWindow;
-
     protected final OnKeyActionListener mOnKeyActionListener;
 
     public AbstractKeyboard(Context context, OnKeyActionListener onKeyActionListener) {
@@ -33,13 +35,16 @@ class AbstractKeyboard {
     }
 
     protected View putContentView(int layoutResId) {
-        final View view = View.inflate(mContext, layoutResId, null);
+        final View view = LayoutInflater.from(mContext).inflate(layoutResId,null);
         mPopupWindow.setContentView(view);
         return view;
     }
 
     public void show(final View anchorView) {
+        mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mPopupWindow.showAtLocation(anchorView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+
         onShow();
     }
 
@@ -59,5 +64,6 @@ class AbstractKeyboard {
         }
         return buff.toString();
     }
+
 
 }
