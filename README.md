@@ -1,5 +1,13 @@
 # 专用键盘
 
+# 项目更新说明
+
+如果您希望使用一个车牌号码专用输入键盘，包括iOS版本、JS版本和Android版本，可以使用本项目的全新、加强、升级版本：
+
+- Android版本：[https://github.com/parkingwang/vehicle-keyboard-android](https://github.com/parkingwang/vehicle-keyboard-android)
+- iOS版本：[https://github.com/parkingwang/vehicle-keyboard-ios](https://github.com/parkingwang/vehicle-keyboard-ios)
+- JS微信版本：[https://github.com/parkingwang/vehicle-keyboard-js](https://github.com/parkingwang/vehicle-keyboard-js)
+
 ## 中国车牌号码专用键盘
 
 支持以下类型的车牌号输入：
